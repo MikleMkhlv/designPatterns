@@ -38,6 +38,8 @@ public class Test {
         OutsideFileRepository outsideFileRepository = new OutsideFileRepository();
         System.out.println(outsideFileRepository.get("7c664580-5b06-4d5b-82dc-a9b37e168379"));
 
+        System.out.println(outsideFileRepository.getAll());
+
     }
 }
 

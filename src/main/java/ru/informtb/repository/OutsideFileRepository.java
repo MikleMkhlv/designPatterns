@@ -126,9 +126,52 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
         return null;
     }
 
+
+    private List<Product> createProduct(HashMap<String, ArrayList<HashMap<String, String>>> productsMap) {
+        List<Product> productList = new ArrayList<>();
+        for (Map.Entry<String, ArrayList<HashMap<String, String>>> el : productsMap.entrySet()) {
+            String identy = null;
+            String name = null;
+            String expirationDate = null;
+            String bulk = null;
+            for (HashMap<String, String> listElements : el.getValue()) {
+                for (Map.Entry<String, String> entry : listElements.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    switch (key) {
+                        case "id":
+                            identy = value;
+                            break;
+                        case "name":
+                            name = value;
+                            break;
+                        case "expirationDate":
+                            expirationDate = value;
+                            break;
+                        case "bulk":
+                            bulk = value;
+                            break;
+                    }
+                }
+            }
+            if (identy == null || name == null || expirationDate == null || bulk == null) {
+                throw new IllegalArgumentException("Не хватает данных для создания продукта");
+            } else {
+                productList.add(new Product(
+                        identy,
+                        name,
+                        expirationDate,
+                        bulk
+                ));
+            }
+        }
+        return productList;
+    }
+
     @Override
     public List<Product> getAll() {
-        return List.of();
+        HashMap<String, ArrayList<HashMap<String, String>>> productsMap = readFile();
+        return createProduct(productsMap);
     }
 
     @Override
