@@ -1,5 +1,6 @@
 package ru.informtb.test;
 
+import ru.informtb.model.Product;
 import ru.informtb.repository.OutsideFileRepository;
 
 public class Test {
@@ -40,6 +41,12 @@ public class Test {
 
         System.out.println(outsideFileRepository.getAll());
 
+
+        Product product = new Product(
+                "Potato", "true", "123"
+        );
+
+        outsideFileRepository.add(product);
     }
 }
 

@@ -2,16 +2,20 @@ package ru.informtb.repository;
 
 import ru.informtb.model.Product;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class OutsideFileRepository implements IReadStorage<Product>, IWriteStorage<Product> {
+
+    private int size;
+
+
+    public OutsideFileRepository() {
+        this.size = 0;
+    }
 
     @Override
     public Product get(String id) {
@@ -165,8 +169,12 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
                 ));
             }
         }
+        setSize(productsMap.size());
         return productList;
     }
+
+
+
 
     @Override
     public List<Product> getAll() {
@@ -176,7 +184,26 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
 
     @Override
     public void add(Product item) {
+        if (item == null || item.getId() == null || item.getName() == null || !item.isExpirationDate() || item.getBulk() == -1) {
+            throw new IllegalArgumentException("Product содержит некорректные данные");
+        }
+        getAll();
+        int currentIndexProduct = this.size;
+        String id = String.format("product.%d.id = %s", currentIndexProduct, item.getId());
+        String name = String.format("product.%d.name = %s", currentIndexProduct, item.getName());
+        String expirationDate = String.format("product.%d.expirationDate = %s", currentIndexProduct, item.isExpirationDate());
+        String bulk = String.format("product.%d.bulk = %d", currentIndexProduct, item.getBulk());
 
+        String product = String.format(
+                "%s\n%s\n%s\n%s\n\n", id, name, expirationDate, bulk
+        );
+
+        File file = new File("/Users/mikle/Documents/data.db");
+        try (BufferedWriter bf = new BufferedWriter(new FileWriter(file, true))) {
+            bf.write(product);
+        }catch (IOException e){
+            e.getStackTrace();
+        }
     }
 
     @Override
@@ -187,5 +214,14 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
     @Override
     public void delete(String id) {
 
+    }
+
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }
