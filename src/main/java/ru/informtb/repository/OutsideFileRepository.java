@@ -35,7 +35,9 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
             while (true) {
                 if ((line = bufferedReader.readLine()) == null) {
                     ArrayList<HashMap<String, String>> finalList = new ArrayList<>(products);
-                    productsMap.put(String.valueOf(index), finalList);
+                    if (!finalList.isEmpty()) {
+                        productsMap.put(String.valueOf(index), finalList);
+                    }
                     break;
                 }
 

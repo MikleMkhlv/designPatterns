@@ -47,6 +47,8 @@ public class Test {
         );
 
         outsideFileRepository.add(product);
+
+        System.out.println(outsideFileRepository.getAll());
     }
 }
 
