@@ -1,0 +1,22 @@
+[Shop]
+name = Perek
+roomArea = 450
+
+[Storage]
+product.0.id = 2f2e2b16-e2f8-47f5-8c65-f7767b9438e1
+product.0.name = Milk
+product.0.expirationDate = true
+product.0.bulk = 10
+
+product.1.id = 7c664580-5b06-4d5b-82dc-a9b37e168379
+product.1.name = Bread
+product.1.expirationDate = true
+product.1.bulk = 20
+
+product.2.id = 8f80787e-1667-4e0b-b2dd-5d9c72ee4a41
+product.2.name = Salt
+product.2.expirationDate = false
+product.2.bulk = 100
+
+
+
