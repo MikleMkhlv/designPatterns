@@ -60,6 +60,10 @@ public class Test {
 
         outsideFileRepository.getAll();
 
+        outsideFileRepository.delete("81ea4772-faf7-4070-bc29-c55f217ceb53");
+
+        outsideFileRepository.getAll();
+
 
     }
 }

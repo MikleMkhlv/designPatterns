@@ -269,6 +269,15 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
 
     @Override
     public void delete(String id) {
+        List<Product> products = getAll();
+        deleteAll();
+        for (Product el : products) {
+            if (el.getId().equals(id)) {
+                System.out.println("Продукт с id = " + id + " удален");
+                continue;
+            }
+            add(el);
+        }
 
     }
 
