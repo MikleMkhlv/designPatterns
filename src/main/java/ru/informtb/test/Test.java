@@ -37,53 +37,28 @@ public class Test {
 
 
         OutsideFileRepository outsideFileRepository = new OutsideFileRepository();
-        System.out.println(outsideFileRepository.get("7c664580-5b06-4d5b-82dc-a9b37e168379"));
 
-        System.out.println(outsideFileRepository.getAll());
-
-
-        Product product = new Product(
+        Product product = new Product("81ea4772-faf7-4070-bc29-c55f217ceb53",
                 "Potato", "true", "123"
         );
+//        outsideFileRepository.add(product);
+//        outsideFileRepository.get(product.getId());
+//
+//        for (int i = 0; i < 3; i++) {
+//            outsideFileRepository.add(new Product(
+//                    "Bobi" + i,
+//                    "true",
+//                    "112333"
+//            ));
+//        }
 
-        outsideFileRepository.add(product);
+        outsideFileRepository.getAll();
 
-        System.out.println(outsideFileRepository.getAll());
-    }
-}
+        product.setName("Oguretz");
 
-class Person {
+        outsideFileRepository.update(product);
 
-    private String name;
-    private int age;
-
-    @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                ", age=" + age +
-                '}';
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
+        outsideFileRepository.getAll();
 
 
     }

@@ -24,7 +24,8 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
     }
 
     private HashMap<String, ArrayList<HashMap<String, String>>> readFile() {
-        File file = new File("/Users/mikle/Documents/data.db");
+//        File file = new File("/Users/mikle/Documents/data.db");
+        File file = new File("C:\\Users\\User\\Documents\\data.db");
         HashMap<String, ArrayList<HashMap<String, String>>> productsMap = new HashMap<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -176,8 +177,6 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
     }
 
 
-
-
     @Override
     public List<Product> getAll() {
         HashMap<String, ArrayList<HashMap<String, String>>> productsMap = readFile();
@@ -200,16 +199,71 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
                 "%s\n%s\n%s\n%s\n\n", id, name, expirationDate, bulk
         );
 
-        File file = new File("/Users/mikle/Documents/data.db");
+        File file = new File("C:\\Users\\User\\Documents\\data.db");
+//        File file = new File("/Users/mikle/Documents/data.db");
         try (BufferedWriter bf = new BufferedWriter(new FileWriter(file, true))) {
             bf.write(product);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.getStackTrace();
         }
     }
 
     @Override
     public void update(Product item) {
+        List<Product> products = getAll();
+        boolean isFoundProduct = false;
+
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).getId().equals(item.getId())) {
+                isFoundProduct = true;
+                products.set(i, item);
+                System.out.println(products.get(i) + "Измененный продукт");
+            }
+        }
+
+        if (!isFoundProduct) {
+            System.out.println("Продукт не найден");
+            return;
+        }
+        deleteAll();
+        for (Product product : products) {
+            System.out.println(product);
+            add(product);
+        }
+    }
+
+    private void deleteAll() {
+        File file = new File("C:\\Users\\User\\Documents\\data.db");
+        StringBuilder result = new StringBuilder();
+        boolean foundStorage = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (line.trim().equals("[Storage]")) {
+                    foundStorage = true;
+                    result.append(line).append("\n");
+                    break;
+                }
+                result.append(line).append("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+            bw.write(result.toString());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (foundStorage) {
+            System.out.println("Файл успешно обрезан после '[Storage]'");
+        } else {
+            System.out.println("Строка '[Storage]' не найдена.");
+        }
 
     }
 
