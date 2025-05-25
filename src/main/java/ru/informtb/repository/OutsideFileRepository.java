@@ -1,6 +1,7 @@
 package ru.informtb.repository;
 
 import ru.informtb.model.Product;
+import ru.informtb.patterns.singleton.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,10 +12,12 @@ import java.util.Map;
 public class OutsideFileRepository implements IReadStorage<Product>, IWriteStorage<Product> {
 
     private int size;
+    private Logger logger;
 
 
-    public OutsideFileRepository() {
+    public OutsideFileRepository(Logger logger) {
         this.size = 0;
+        this.logger = logger;
     }
 
     @Override
@@ -125,6 +128,7 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
                     }
                 }
                 if (identy == null || name == null || expirationDate == null || bulk == null) {
+                    logger.logWarning("Не хватает данных для создания продукта");
                     throw new IllegalArgumentException("Не хватает данных для создания продукта");
                 }
                 return new Product(identy, name, expirationDate, bulk);
@@ -162,6 +166,7 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
                 }
             }
             if (identy == null || name == null || expirationDate == null || bulk == null) {
+                logger.logWarning("Не хватает данных для создания продукта");
                 throw new IllegalArgumentException("Не хватает данных для создания продукта");
             } else {
                 productList.add(new Product(
@@ -186,6 +191,7 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
     @Override
     public void add(Product item) {
         if (item == null || item.getId() == null || item.getName() == null || !item.isExpirationDate() || item.getBulk() == -1) {
+            logger.logWarning("Product содержит некорректные данные");
             throw new IllegalArgumentException("Product содержит некорректные данные");
         }
         getAll();
@@ -217,12 +223,12 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
             if (products.get(i).getId().equals(item.getId())) {
                 isFoundProduct = true;
                 products.set(i, item);
-                System.out.println(products.get(i) + "Измененный продукт");
+                logger.logInfo(String.format("%s:$s - Измененный продукт", products.get(i).getId(), products.get(i).getName()));
             }
         }
 
         if (!isFoundProduct) {
-            System.out.println("Продукт не найден");
+            logger.logError(String.format("%s: %s - не найден", item.getId(), item.getName()));
             return;
         }
         deleteAll();
@@ -260,9 +266,9 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
             e.printStackTrace();
         }
         if (foundStorage) {
-            System.out.println("Файл успешно обрезан после '[Storage]'");
+            logger.logInfo("Файл успешно обрезан после '[Storage]'");
         } else {
-            System.out.println("Строка '[Storage]' не найдена.");
+            logger.logError("Строка '[Storage]' не найдена.");
         }
 
     }
@@ -273,7 +279,7 @@ public class OutsideFileRepository implements IReadStorage<Product>, IWriteStora
         deleteAll();
         for (Product el : products) {
             if (el.getId().equals(id)) {
-                System.out.println("Продукт с id = " + id + " удален");
+                logger.logInfo(String.format("Продукт с id = %s удален", id));
                 continue;
             }
             add(el);

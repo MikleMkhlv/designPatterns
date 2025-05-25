@@ -1,6 +1,8 @@
 package ru.informtb.test;
 
 import ru.informtb.model.Product;
+import ru.informtb.patterns.singleton.Logger;
+import ru.informtb.patterns.singleton.LoggerService;
 import ru.informtb.repository.OutsideFileRepository;
 
 public class Test {
@@ -34,9 +36,9 @@ public class Test {
 //        Product p = new Product("dsadas", true, 123);
 //
 //        System.out.println(p);
+        Logger logger = LoggerService.getInstance();
 
-
-        OutsideFileRepository outsideFileRepository = new OutsideFileRepository();
+        OutsideFileRepository outsideFileRepository = new OutsideFileRepository(logger);
 
         Product product = new Product("81ea4772-faf7-4070-bc29-c55f217ceb53",
                 "Potato", "true", "123"
@@ -63,6 +65,8 @@ public class Test {
         outsideFileRepository.delete("81ea4772-faf7-4070-bc29-c55f217ceb53");
 
         outsideFileRepository.getAll();
+
+        logger.getLogHistory();
 
 
     }
